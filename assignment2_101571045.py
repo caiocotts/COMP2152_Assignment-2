@@ -142,20 +142,20 @@ def save_results(target: str, results: list[tuple]):
                        create table if not exists scans
                        (
                            id
-                           integer
-                           primary
-                           key
-                           autoincrement,
+                               integer
+                               primary
+                                   key
+                               autoincrement,
                            target
-                           text,
+                               text,
                            port
-                           integer,
+                               integer,
                            status
-                           text,
+                               text,
                            service
-                           text,
+                               text,
                            scan_date
-                           text
+                               text
                        );
                        """)
         for (port, status, service_name) in results:
@@ -240,14 +240,12 @@ if __name__ == "__main__":
     ps = PortScanner(target_ip)
     print(f'\n--- Scanning {target_ip} from port {start_port} to {end_port}...---')
     ps.scan_range(start_port, end_port)
-    for scan_info in ps.scan_results:
-        print(f'Port: {scan_info[0]}, Status: {scan_info[1]}, Service: {scan_info[2]}')
+    # Port 22: Open (SSH)
+    print(f'--- Scan Results for {target_ip} ---')
+    for (port, status, service_name) in ps.get_open_ports():
+        print(f'Port {port}: {status} ({service_name})')
     print('------')
-    op = 0
-    for scan_info in ps.scan_results:
-        if scan_info[1] == 'Open':
-            op += 1
-    print('Total open ports found: ', op)
+    print('Total open ports found: ', len(ps.get_open_ports()))
     save_results(ps.target, ps.scan_results)
     choice = input('Would you like to see past scan history? (yes/no): ').lower()
     if choice == 'yes':
@@ -259,4 +257,3 @@ if __name__ == "__main__":
 # I would add a feature to allow the user to specify a custom list of ports to scan instead of a range.
 # This would be useful for users who only want to scan specific ports that are relevant to their needs.
 # The implementation could use a list comprehension to filter the scan results based on the user-specified ports, allowing for efficient retrieval of the relevant scan information.
-
