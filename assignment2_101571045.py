@@ -46,6 +46,10 @@ class NetworkTool:
     def __init__(self, target: str):
         self.__target = target
 
+    # Q3: What is the benefit of using @property and @target.setter?
+    # TODO: Your 2-4 sentence answer here... (Part 2, Q3)
+    # Using @property and @target.setter allows us to control access to the target attribute.
+    # This encapsulation helps maintain data integrity and prevents invalid states in our objects.
     @property
     def target(self) -> str:
         return self.__target
@@ -61,21 +65,15 @@ class NetworkTool:
         print('NetworkTool instance destroyed')
 
 
-# Q3: What is the benefit of using @property and @target.setter?
-# TODO: Your 2-4 sentence answer here... (Part 2, Q3)
-# Using @property and @target.setter allows us to control access to the target attribute.
-# This encapsulation helps maintain data integrity and prevents invalid states in our objects.
-
-
-# Q1: How does PortScanner reuse code from NetworkTool?
-# TODO: Your 2-4 sentence answer here... (Part 2, Q1)
-# PortScanner inherits from NetworkTool, which means it can use the target attribute and its methods, getters, and setters without having to redefine them.
-# This can be accomplished by using the "class childClass(superClass)" syntax
 
 # TODO: Create the PortScanner child class that inherits from NetworkTool (Step vi)
 # - Constructor: call super().__init__(target), initialize self.scan_results = [], self.lock = threading.Lock()
 # - Destructor: print "PortScanner instance destroyed", call super().__del__()
 
+# Q1: How does PortScanner reuse code from NetworkTool?
+# TODO: Your 2-4 sentence answer here... (Part 2, Q1)
+# PortScanner inherits from NetworkTool, which means it can use the target attribute and its methods, getters, and setters without having to redefine them.
+# This can be accomplished by using the "class childClass(superClass)" syntax
 class PortScanner(NetworkTool):
     def __init__(self, target: str):
         super().__init__(target)
@@ -87,10 +85,10 @@ class PortScanner(NetworkTool):
         super().__del__()
 
     def scan_port(self, port: int):
-        #     Q4: What would happen without try-except here?
-        #     TODO: Your 2-4 sentence answer here... (Part 2, Q4)
-        # Without try-except, if an error occurs while scanning a port (e.g., network error, permission error), the entire scanning process would crash and stop.
         sock = None
+        # Q4: What would happen without try-except here?
+        # TODO: Your 2-4 sentence answer here... (Part 2, Q4)
+        # Without try-except, if an error occurs while scanning a port (e.g., network error, permission error), the entire scanning process would crash and stop.
         try:
             sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             sock.settimeout(1)
@@ -109,12 +107,11 @@ class PortScanner(NetworkTool):
     def get_open_ports(self) -> list[tuple]:
         return [port_info for port_info in self.scan_results if port_info[1] == 'Open']
 
-    #     Q2: Why do we use threading instead of scanning one port at a time?
-    #     TODO: Your 2-4 sentence answer here... (Part 2, Q2)
+    # Q2: Why do we use threading instead of scanning one port at a time?
+    # TODO: Your 2-4 sentence answer here... (Part 2, Q2)
     # Using threading allows us to scan multiple ports simultaneously, which could reduce time spent scanning large ranges of ports
     # This is not really that significant or noticeable in this case as scanning ports is a relatively fast operation.
     # But if scanning a port was more time-consuming, then scanning ports sequentially could take a long time, this is where concurrency would be more beneficial.
-
     def scan_range(self, start_port, end_port):
         threads = []
         for port in range(start_port, end_port + 1):
